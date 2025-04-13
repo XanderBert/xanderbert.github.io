@@ -1,10 +1,4 @@
-  ---
-  title: Page with no cover image
-  author: Tao He
-  date: 2022-05-24
-  category: Jekyll
-  layout: post
-  ---
+
 
 > ##### TIP
 >
