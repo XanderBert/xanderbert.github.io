@@ -1,5 +1,8 @@
 # Configurations
-title:            Jekyll Gitbook
-longtitle:        Jekyll Gitbook
+title:            Xander's Notebook
+longtitle:        Xander's Notebook
 
 remote_theme:     sighingnow/jekyll-gitbook
+
+toc:
+  enabled: true
