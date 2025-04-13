@@ -2,7 +2,8 @@
 title:            Xander's Notebook
 longtitle:        Xander's Notebook
 
-remote_theme:     sighingnow/jekyll-gitbook
 
 toc:
   enabled: true
+
+remote_theme:     sighingnow/jekyll-gitbook
