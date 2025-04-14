@@ -27,11 +27,11 @@ A barrier in Vulkan can have three primary effects on a GPU:
 The following flowchart illustrates the decision process when using a pipeline barrier:
 
 ```mermaid
-flowchart TD;
-    A[Write Operation Completed] --> B{Is synchronization needed?};
-    B -- Yes --> C[Insert Pipeline Barrier];
-    C --> D[Stall Execution (Drain Work)];
-    C --> E[Flush/Invalidate GPU Caches];
-    C --> F[Perform Resource Decompression (if required)];
-    B -- No --> G[Proceed without Barrier];
+flowchart TD
+    A[Write Operation Completed] --> B{Is synchronization needed?}
+    B -- Yes --> C[Insert Pipeline Barrier]
+    C --> D[Stall Execution (Drain Work)]
+    C --> E[Flush/Invalidate GPU Caches]
+    C --> F[Perform Resource Decompression (if required)]
+    B -- No --> G[Proceed without Barrier]
 ```
