@@ -7,3 +7,4 @@ toc:
   enabled: true
 
 remote_theme:     sighingnow/jekyll-gitbook
+syntax_highlighter_style: monokai
