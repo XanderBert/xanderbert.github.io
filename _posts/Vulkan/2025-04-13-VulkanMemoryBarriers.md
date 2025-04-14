@@ -2,6 +2,7 @@
 title: Vulkan Memory Barriers
 author: Xander Berten
 layout: post
+mermaid: true
 ---
 
 Vulkan pipeline barriers are one of the most challenging aspects of optimizing your Vulkan code. Unlike older graphics APIs—where the driver or runtime handled many synchronization details—Vulkan requires explicit management of barriers by the developer. This post summarizes the behavior, performance implications, and best practices around Vulkan pipeline barriers.
@@ -26,11 +27,11 @@ A barrier in Vulkan can have three primary effects on a GPU:
 The following flowchart illustrates the decision process when using a pipeline barrier:
 
 ```mermaid
-flowchart TD
-    A[Write Operation Completed] --> B{Is synchronization needed?}
-    B -- Yes --> C[Insert Pipeline Barrier]
-    C --> D[Stall Execution (Drain Work)]
-    C --> E[Flush/Invalidate GPU Caches]
-    C --> F[Perform Resource Decompression (if required)]
-    B -- No --> G[Proceed without Barrier]
+flowchart TD;
+    A[Write Operation Completed] --> B{Is synchronization needed?};
+    B -- Yes --> C[Insert Pipeline Barrier];
+    C --> D[Stall Execution (Drain Work)];
+    C --> E[Flush/Invalidate GPU Caches];
+    C --> F[Perform Resource Decompression (if required)];
+    B -- No --> G[Proceed without Barrier];
 ```
