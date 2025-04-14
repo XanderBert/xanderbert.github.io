@@ -7,4 +7,7 @@ toc:
   enabled: true
 
 remote_theme:     sighingnow/jekyll-gitbook
-syntax_highlighter_style: monokai
+#syntax_highlighter_style: monokai
+markdown: kramdown
+highlighter: rouge
+    input: GFM
