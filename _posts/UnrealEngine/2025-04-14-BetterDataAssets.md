@@ -15,6 +15,7 @@ class UMyDataObject : public UObject
 {
     GENERATED_BODY()
 public:
+UPROPERTY(EditAnywhere)
 FVector MyVector;
 }
 ```
