@@ -33,3 +33,6 @@ if (AssetData.IsValid())
 	UE_LOG(LogTemp, Log, TEXT("Package Path: %s"), *AssetData.PackageName.ToString());
 }
 ```
+
+
+## Adding Custom Meta Data
