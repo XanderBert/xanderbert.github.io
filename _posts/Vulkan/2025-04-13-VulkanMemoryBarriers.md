@@ -35,3 +35,5 @@ flowchart TD
     C --> F[Perform Resource Decompression (if required)]
     B -- No --> G[Proceed without Barrier]
 ```
+
+
