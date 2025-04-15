@@ -3,8 +3,5 @@ title:            Xander's Notebook
 longtitle:        Xander's Notebook
 
 
-toc:
-  enabled: true
-
 remote_theme:     sighingnow/jekyll-gitbook
 syntax_highlighter_style: github
