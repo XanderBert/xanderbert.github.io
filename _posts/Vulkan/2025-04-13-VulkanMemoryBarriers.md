@@ -6,7 +6,7 @@ mermaid: true
 ---
 
 ## Why Vulkan Barriers Are Challenging
-Vulkan's explicit synchronization model gives developers fine-grained control over GPU operations, but with great power comes great responsibility. Unlike legacy APIs that handle synchronization automatically (often conservatively), Vulkan requires manual barrier management—a critical skill for performance optimization.
+Vulkan's explicit synchronization model gives developers fine-grained control over GPU operations, but with great power comes great responsibility. Unlike legacy APIs that handle synchronization automatically (often conservatively), 
 
 Get barriers wrong, and you risk:
 
@@ -107,5 +107,5 @@ flowchart LR
 
 Mobile GPUs parallelize vertex/fragment work:\
 Bad: `VERTEX_SHADER` → `FRAGMENT_SHADER` barriers serialize pipelines.\
-Good: `COLOR_ATTACHMENT_OUTPUT` → `FRAGMENT_SHADER` allows overlap.\
+Good: `COLOR_ATTACHMENT_OUTPUT` → `FRAGMENT_SHADER` allows overlap
 
