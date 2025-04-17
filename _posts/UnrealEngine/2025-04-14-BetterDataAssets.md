@@ -27,7 +27,7 @@ FVector MyVector;
 ``` c++
 //Class used to wrap our UMyDataObject with
 UCLASS(BlueprintType, Blueprintable, EditInlineNew, CollapseCategories, NotPlaceable, meta = (DontUseGenericSpawnObject, DataOnly))
-class CYABILITYSYSTEM_API UMyDataObjectBlueprint : public UBlueprint 
+class YOUR_API UMyDataObjectBlueprint : public UBlueprint 
 {
 	GENERATED_BODY()
 public:
@@ -79,7 +79,7 @@ UMyDataObjectFactory::UMyDataObjectFactory(const FObjectInitializer& ObjectIniti
 
 UObject* UMyDataObjectFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn, FName CallingContext)
 {
-	// Make sure we are trying to factory a gameplay ability blueprint, then create and init one
+	// Make sure we are trying to factory a blueprint, then create and init one
 	check(InClass->IsChildOf(UMyDataObjectBlueprint::StaticClass()));
 
 
