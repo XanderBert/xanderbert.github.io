@@ -14,7 +14,7 @@ void DoSomething(const FODelegateSignature& OnSomethingHappened)
     };
 }
 ```
-
+<!---
 <div style="width: 100%; max-width: 1000px; height: 600px;">
   <iframe 
     src="https://blueprintue.com/render/ha3ksn1c/" 
@@ -23,3 +23,4 @@ void DoSomething(const FODelegateSignature& OnSomethingHappened)
     allowfullscreen>
   </iframe>
 </div>
+-->
