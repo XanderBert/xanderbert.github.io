@@ -6,6 +6,9 @@ layout: post
 ```cpp
 DECLARE_DYNAMIC_DELEGATE(FODelegateSignature);
 
+
+
+UFUNCTION(BlueprintCallable)
 void DoSomething(const FODelegateSignature& OnSomethingHappened)
 {
     AsyncTask(ENamedThreads::AnyThread, [OnSomethingHappened]()
