@@ -11,7 +11,7 @@ look into what is vibriting and making that weird noise at 2k rpm
 
 ## Coolant
 Radiator\
-Radiator Cap in right spec\
+Radiator Cap in right spec -> no its 0.6bar but it needs to be 1 bar or 15psi\
 Breathable overflow tank\
 Move Overflow tank\
 new coolant\
