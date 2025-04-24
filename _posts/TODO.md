@@ -7,6 +7,13 @@
 - Choke not closing properly
 - Distributor rebuilding -> youtube video
 
+### Gameplan
+1) brake cleaner on intake gasket + Carb rubbers
+2) clean and gap sparkplugs
+3) Adjust Choke
+4) Make car leaner -> MARK CURRENT FUEL SETTING
+5) Rebuild Distributor
+6) Buy a boroscope and check for coolant seapage into cylinders
 
 ## Top Engine
 Fix minor ticking -> probably electrical timing that is too advanced
