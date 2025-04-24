@@ -4,12 +4,11 @@ author: Xander Berten
 layout: post
 ---
 ```cpp
-DECLARE_DYNAMIC_DELEGATE(FODelegateSignature);
-
+DECLARE_DYNAMIC_DELEGATE(FOnSomethingHappenedSignature);
 
 
 UFUNCTION(BlueprintCallable)
-void DoSomething(const FODelegateSignature& OnSomethingHappened)
+void DoSomething(const FOnSomethingHappenedSignature& OnSomethingHappened)
 {
     AsyncTask(ENamedThreads::AnyThread, [OnSomethingHappened]()
     {
@@ -17,13 +16,3 @@ void DoSomething(const FODelegateSignature& OnSomethingHappened)
     };
 }
 ```
-<!---
-<div style="width: 100%; max-width: 1000px; height: 600px;">
-  <iframe 
-    src="https://blueprintue.com/render/ha3ksn1c/" 
-    style="width: 100%; height: 100%;" 
-    scrolling="no" 
-    allowfullscreen>
-  </iframe>
-</div>
--->

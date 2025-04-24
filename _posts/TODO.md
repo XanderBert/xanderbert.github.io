@@ -1,7 +1,15 @@
 
+## Cold Start Misfire
+- Intake Manifold Gasket leak (could close up due to heat)
+    - Brake Cleaner on manifold on start
+- minimal coolant seapage into a cylinder -> Doubt because first 10 seconds run fine. + recent rebuild -> but could have happend because of overpressure of coolant
+- Cabron buildup on Spark Plugs or gap out of spec
+- Choke not closing properly
+- Distributor rebuilding -> youtube video
+
+
 ## Top Engine
-Fix valve latch tick\
-fix oil leak\
+Fix minor ticking -> probably electrical timing that is too advanced
 repaint valve cover with black wrinkel paint\
 install timing belt cover\
 look into what is vibriting and making that weird noise at 2k rpm
@@ -11,12 +19,10 @@ look into what is vibriting and making that weird noise at 2k rpm
 
 ## Coolant
 Radiator\
-Radiator Cap in right spec -> no its 0.6bar but it needs to be 1 bar or 15psi\
-Breathable overflow tank\
+Breathable overflow tank-> make hole into cap\
 Move Overflow tank\
 new coolant\
 correct thermostat\
-fix coolant leak against engine (pressure)\
 
 ### Needed parts for this:
 - Radiator
@@ -26,22 +32,21 @@ fix coolant leak against engine (pressure)\
 ## Brakes
 Scraping sound left front tyre\
 squel when braking front tyres\
-check for leak\
 repaint callipers
+Leaking brake fluid from master brake booster
 
 
 ## Suspension
 Replace front suspension\
 repaint shock tower black\
-rubberized paint wheel well\
 Replace all rubbers with polyuth rubber\
 
 ### Needed parts for this:
-- Paint brush
 - Black paint
 
 ## Transmission
 replace transmission fluid
+relube and check speedo cable
 
 ### Needed parts for this:
 - transmission fluid
@@ -77,3 +82,6 @@ left wheel booth is ripped
 
 ### Needed parts for this:
 - special clamp
+
+## Electrical
+- High voltage alternator (when high beams are on the stop lights are almost gone) 90 - 93 Honda Accord alternator is plug and play, make sure its above 70amps, 94 honda accord also works but will need modification
