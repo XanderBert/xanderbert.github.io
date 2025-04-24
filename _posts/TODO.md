@@ -66,14 +66,14 @@ fix sagging bumper back\
 - some hardware
 
 ## light
-find foglights\
+find foglights (some old bmw fog worked upside down look on fb page)\
 repaint the name on stop lights
 
 ### Needed parts for this:
 - foglights
 
 ## Interior
-Properly mount back speakers
+Properly mount back speakers? How??
 find way so the radio cover doesn't vibrate as much\
 install speaker louder maker thingy but test first\
 install sunroof cover
