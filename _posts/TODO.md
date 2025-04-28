@@ -30,6 +30,7 @@ correct thermostat\
 
 ### Needed parts for this:
 - Radiator
+- new radiator cap 1.1 bar
 
 ## Brakes
 Scraping sound left front tyre\
@@ -91,3 +92,22 @@ left wheel booth isnt'clamped enough
 
 
 BMW E30 sides body fit prelude
+
+These fit:
+![alt text](image.png)
+13,97 centimeters - width
+10.16 centimeters - all included height
+7.62 centimeters -  fogligth height
+5.08 centimeters - depth
+
+
+Look into hella ->
+
+
+https://www.amazon.com.be/-/nl/HELLA-Halogeen-Projector-groot-bereik/dp/B01IP8ULPM/ref=asc_df_B01IP8ULPM?mcid=1782b6e8c2de3a1b965fdd0dc308dfd5&hvadid=714424822216&hvpos=&hvnetw=g&hvrand=6806525626719323659&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9196181&hvtargid=pla-1212721563770&psc=1&language=nl_BE
+
+Width: 19,5 cm - 
+Height: 96 mm - 
+Depth: 83 mm - 
+Position depth: 18 mm -
+Height space: 119 mm -
