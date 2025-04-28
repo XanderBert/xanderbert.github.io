@@ -7,8 +7,8 @@
 - Distributor rebuilding -> youtube video
 
 ### Gameplan
-1) brake cleaner on intake gasket + Carb rubbers
-2) clean and gap sparkplugs
+1) brake cleaner on intake gasket + Carb rubbers -> X
+2) clean and gap sparkplugs -> X
 3) Adjust Choke
 4) Make car leaner -> MARK CURRENT FUEL SETTING
 5) Rebuild Distributor
