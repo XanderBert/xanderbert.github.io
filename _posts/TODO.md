@@ -9,10 +9,11 @@
 ### Gameplan
 1) brake cleaner on intake gasket + Carb rubbers -> X
 2) clean and gap sparkplugs -> X
-3) Adjust Choke
-4) Make car leaner -> MARK CURRENT FUEL SETTING
-5) Rebuild Distributor
-6) Buy a boroscope and check for coolant seapage into cylinders (cylinder 3 had minor  oil around the seal?)
+3) after 12 hours -> add oil then start, see if clunking goes away (i suspect oil pressure to come on too late)
+4) Adjust Choke
+5) Make car leaner -> MARK CURRENT FUEL SETTING
+6) Rebuild Distributor
+7) Buy a boroscope and check for coolant seapage into cylinders (cylinder 3 had minor  oil around the seal?)
 
 ## Top Engine
 repaint valve cover with black wrinkel paint\
