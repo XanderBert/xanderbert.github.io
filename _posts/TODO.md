@@ -112,3 +112,64 @@ Height: 96 mm -
 Depth: 83 mm - 
 Position depth: 18 mm -
 Height space: 119 mm -
+
+
+
+
+
+
+
+
+
+
+# Budget K Swap
+
+Full transparency this is my first engine swap/install. This has been a 5 year mission. 
+
+To cheaply go an build a BUDGET kswapped prelude. 
+
+Then sell it to fund a dream build on my goldie prelude. I mainly used https://vtec.academy/budget-k-swap/ as a guide.
+THERE ARE SOME GAPS HERE BUT THIS SHOULD GET YOU STARTED.
+
+
+K24a4 w/ trans $200 accord shifter & cables included.
+
+90-91 knuckles
+Front Right Spindle Knuckle HONDA PRELUDE 90 US $85.00 ebay
+Front Left Spindle Knuckle HONDA PRELUDE 90 US $85.00 ebay
+
+2006 Honda Element Manual 5 Speed Engine Wire Harness Charge Harness US $135.00 ebay
+
+Half Shaft - 07 08 09 10 11 HONDA CIVIC SI SEDAN 2.0L FRONT RIGHT PASSENGER SIDE JACK SHAFT US $120.94 ebay
+
+Custom brackets from send cut send
+REAR - $85 2 PIECE
+DRIVER - $51
+PASS - $95
+
+Transmount $80 - https://jackspaniaracing. shop/products/k-series-k24-trans-transmission-mount-bracket-civic-94-01-integra-eg-accord-tsx?variant=46052822024417
+
+CRV engine bracket junkyard cheap???
+
+Engine Swap Mounts For Civic 92-95 Integra 94-01 K Series Swap K20 K24 62A Red US $185.00 only used the rubber mounts
+Swivel coolant housing kswap $20-40 cant remember where/which one.
+Driver axle (CAN'T FIND MY INFO ON THIS CURRENTLY, SORRY)
+Passenger axle
+TRQ Front Right CV Axle Shaft Assembly Passenger Side Compatible with 2004-2006 Acura TL 2003-2007 Honda Accord 2002-2006 CR-V $92
+Acuity Throttle Position Sensor $115
+Acuity TPS accord throttle body adapter $20 CUSTOM PART
+K Series K Swap Ramhorn Header $450.00top half. Custom bottom half. BURTON RACING
+Rywire conversion harness. $400+
+Hondata ECU $1k (affirm financing is your friend)
+Jackspania accord transmission bracket $80
+Half shaft 07-11 civic si $120
+Continental 52021 Flexible Coolant Hose, 1-1/4" x 20,Black $23
+Upgr8 Universal 4-Ply High Performance 45 Degree Elbow Coupler Silicone Hose (1.25"(32MM), Black) $12
+AEM 25-302BK Black High Volume Adjustable Fuel Pressure Regulator $143
+Camco Heavy Duty Battery Box with Straps and Hardware - Group 24 |Safely Stores RV, Automotive, and Marine Batteries |Durable Anti-Corrosion Material | Measures 7-1/4" x 10-3/4" x 8" | (55363) $17
+6 Gauge 6 AWG 25 Feet Red Welding Battery Pure Copper Flexible Cable Wire - Car, Inverter, RV, Solar by WindyNation $43
+BLUE 2.5" 63.5 mm Inlet Cold Air Cone Replacement Performance Washable Clamp-On Dry Air Filter $17
+HiSport Extension Harness 36'' 4 Wires for Upstream Downstream O2 Oxygen Sensor Compatible with Honda Acura Civic Integra Prelude $10
+K-Swap Coolant Temperature Sender Sensor Adapter K20 K24 Engine Swap Fit for Honda Civic with Fittings Adaptor 3/8-1/8NPT $10
+HPS 3/4" ID, Silicone 180 Degree U Bend Elbow Coupler Hose, High Temp 4-Ply Reinforced, Leg Length on Each Side: 4-1/2", 80 Psi Max. Pressure, SEC-8831-BLK, Silicone, Blue $32
+Upper Coolant Housing Straight Inlet with Integrated Filler Neck for Honda K24 K20Z3 $54
