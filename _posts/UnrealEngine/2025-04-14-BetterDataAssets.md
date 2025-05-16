@@ -277,7 +277,11 @@ void FYourPluginEditorModule::ShutdownModule()
 ## Final Result
 Taadaaaa we have a data only `UBlueprint` object that just holds a `UObject`.
 This can be really powerfull to setup data oriented systems and pass around as `TSoftClassPtr`.
-![alt text](image-1.png)
 
 
-![alt text](image.png)
+![My image](/_assets/images/image-1.jpg)
+*My image*
+
+
+![My image](/_assets/images/image.jpg)
+*My image*
