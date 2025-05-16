@@ -262,7 +262,7 @@ void FYourPluginEditorModule::ShutdownModule()
 	if (FModuleManager::Get().IsModuleLoaded("AssetTools"))
 	{
 		IAssetTools& AssetTools = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools").Get();
-		AssetTools.UnregisterAssetTypeActions(AbilityDescriptionAsset.ToSharedRef());
+		AssetTools.UnregisterAssetTypeActions(MyDataObjectAsset.ToSharedRef());
 	}
 
 	if (MyDataObjectAsset.IsValid()) 
