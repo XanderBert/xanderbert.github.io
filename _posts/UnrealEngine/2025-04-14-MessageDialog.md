@@ -4,7 +4,29 @@ author: Xander Berten
 layout: post
 ---
 
-
+### Calling a dialog
 ``` c++
-FMessageDialog::Open( EAppMsgType::Ok, FText::Format( LOCTEXT("CannotCreateAnimBlueprint", "Cannot create an Anim Blueprint based on the class '{ClassName}'."), Args ) );
+FMessageDialog::Open(EAppMsgType::Ok, FText::FromString("Hello Unreal"));
+```
+
+
+### Message Types
+```cpp
+namespace EAppMsgType
+{
+	/**
+	 * Enumerates supported message dialog button types.
+	 */
+	enum Type
+	{
+		Ok,
+		YesNo,
+		OkCancel,
+		YesNoCancel,
+		CancelRetryContinue,
+		YesNoYesAllNoAll,
+		YesNoYesAllNoAllCancel,
+		YesNoYesAll,
+	};
+}
 ```
