@@ -279,9 +279,5 @@ Taadaaaa we have a data only `UBlueprint` object that just holds a `UObject`.
 This can be really powerfull to setup data oriented systems and pass around as `TSoftClassPtr`.
 
 
-![My image](/_assets/images/image-1.jpg)
-*My image*
-
-
-![My image](/_assets/images/image.jpg)
-*My image*
+![My image2](/assets/images/image-1.png)*My image2*
+![My image](/assets/images/image.png) *My image*
