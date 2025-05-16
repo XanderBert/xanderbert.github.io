@@ -120,4 +120,61 @@ UObject* UMyDataObjectFactory::FactoryCreateNew(UClass* Class, UObject* InParent
 ### Registering the Asset
 
 ###  Blueprint Asset Type Actions
-`FAssetTypeActions_Blueprint`
+```cpp
+class YOUR_API FAssetTypeActions_MyDataObject : public FAssetTypeActions_Blueprint
+{
+public:
+	virtual FText GetName() const override;
+	virtual FColor GetTypeColor() const override;
+	virtual UClass* GetSupportedClass() const override;
+	virtual uint32 GetCategories() override { return EAssetTypeCategories::Blueprint | EAssetTypeCategories::Gameplay; }
+
+	//Used to do certain things or initialize things when we open up the editor for the object
+	//virtual void OpenAssetEditor(const TArray<UObject*>& InObjects, TSharedPtr<class IToolkitHost> EditWithinLevelEditor = TSharedPtr<IToolkitHost>()) override;
+
+
+	virtual UFactory* GetFactoryForBlueprintType(UBlueprint* InBlueprint) const override;
+
+private:
+
+	/** Returns true if the blueprint is data only */
+	bool ShouldUseDataOnlyEditor(const UBlueprint* Blueprint) const;
+};
+```
+
+
+```cpp
+#define LOCTEXT_NAMESPACE "AssetTypeActions"
+
+FText FAssetTypeActions_MyDataObject::GetName() const
+{
+	return NSLOCTEXT("AssetTypeActions", "AssetTypeActions_MyDataObjectBlueprint", "My Data Object Blueprint");
+}
+
+FColor FAssetTypeActions_MyDataObject::GetTypeColor() const
+{
+	return FColor::FromHex("#C9A0DCFF");
+}
+
+UClass* FAssetTypeActions_MyDataObject::GetSupportedClass() const
+{
+	return UMyDataObjectBlueprint::StaticClass();
+}
+
+UFactory* FAssetTypeActions_MyDataObject::GetFactoryForBlueprintType(UBlueprint* InBlueprint) const
+{
+	UMyDataObjectFactory* MyDataObjectFactory = NewObject<UMyDataObjectFactory>();
+	MyDataObjectFactory->ParentClass = TSubclassOf<UMyDataObject>(*InBlueprint->GeneratedClass);
+	return MyDataObjectFactory;
+}
+
+bool FAssetTypeActions_MyDataObject::ShouldUseDataOnlyEditor(const UBlueprint* Blueprint) const
+{
+	return FBlueprintEditorUtils::IsDataOnlyBlueprint(Blueprint)
+		&& !FBlueprintEditorUtils::IsLevelScriptBlueprint(Blueprint)
+		&& !FBlueprintEditorUtils::IsInterfaceBlueprint(Blueprint)
+		&& !Blueprint->bForceFullEditor
+		&& !Blueprint->bIsNewlyCreated;
+}
+#undef LOCTEXT_NAMESPACE
+```
