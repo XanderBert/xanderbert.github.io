@@ -4,10 +4,9 @@ author: Xander Berten
 layout: post
 ---
 
-# Prenote
 I assume you have basic knowledge about creating plugins in Unreal Engine and how Modules work.
 
-I have kept all code in header files to be more consie
+I have kept all code in header files to be more consise
 
 # Why?
 
