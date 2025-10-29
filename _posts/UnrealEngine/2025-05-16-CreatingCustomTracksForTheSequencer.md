@@ -58,8 +58,7 @@ Now that we have a idea why this can be extremly helpful and reusable. ill try t
 A sequence consists of tracks
 each tracks consist of sections
 
-![alt text](image.png)
-
+![sequence](/assets/images/sequence.png)
 
 Now that we have a basic idae of how the sequencer is build up we can start creating our Sections and Track. 
 
@@ -136,7 +135,8 @@ private:
     TObjectPtr<UMovieSceneTestSection> Section{};
 };
 ```
-![alt text](image-1.png)
+
+![section instance](/assets/images/section_instance.png)
 
 
 I suggest using `OnInputAdded` to do stuff at the beginning, As you can can "grab" more context out of the sequencer (such as bound objects to this track) trough the `InInput`. This is done trough the Linker InstanceRegistry. I will write another post about this topic later on.
