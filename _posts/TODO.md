@@ -25,20 +25,10 @@ look into what is vibriting and making that weird noise at 2k rpm -> Exhaust pip
 
 ## Coolant
 New Radiator\
-Move Overflow tank (Should be tested first if it needs to be put on a higher position then the radiator cap so its easier to flow back into the radiator)\
-new coolant\
 correct thermostat\
 
 ### Needed parts for this:
 - Radiator
-- new radiator cap 1.1 bar
-
-## Brakes
-Scraping sound left front tyre\
-squel when braking front tyres\
-repaint callipers
-Leaking brake fluid from master brake booster
-New front brakes
 
 
 ## Suspension
@@ -72,7 +62,6 @@ repaint the name on stop lights
 Properly mount back speakers? How?? -> driver side back is loose
 find way so the radio cover doesn't vibrate as much\
 install speaker louder maker thingy but test first\
-install sunroof cover
 
 ## Exterior
 wetsand, polish and buff paint
@@ -81,16 +70,13 @@ wetsand, polish and buff paint
 - extremly fine sandpaper ( 4K - 8K) for machine 
 
 ## Drivetrain
-left wheel booth isnt'clamped enough
-
+left wheel booth isnt'clamped enough (zip tie for now?) 
 
 ### Needed parts for this:
 - special clamp
 
 ## Electrical
 - High voltage alternator (when high beams are on the stop lights are almost gone) 90 - 93 Honda Accord alternator is plug and play, make sure its above 70amps, 94 honda accord also works but will need modification -> 93 2.3l prelude also works
-
-
 
 BMW E30 sides body fit prelude
 
