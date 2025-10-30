@@ -2,6 +2,9 @@
 title: Creating Custom Tracks For the Sequencer
 author: Xander Berten
 layout: post
+toc:
+    enabled: true
+
 ---
 
 I assume you have basic knowledge about creating plugins in Unreal Engine and how Modules work.
