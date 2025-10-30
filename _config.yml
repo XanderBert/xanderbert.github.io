@@ -5,4 +5,6 @@ longtitle:        Xander's Notebook
 remote_theme:     sighingnow/jekyll-gitbook
 syntax_highlighter_style: github
 
-github:           https://github.com/XanderBert
+github_username:  XanderBert
+facebook: false
+twitter: false
