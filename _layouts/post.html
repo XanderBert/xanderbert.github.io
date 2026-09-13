@@ -1,0 +1,46 @@
+---
+layout: default
+---
+<div class="post-grid">
+  <article class="post">
+    <header class="post-header">
+      {% if page.category %}<a class="pill" href="{{ '/' | relative_url }}#{{ page.category | slugify }}">{{ page.category }}</a>{% endif %}
+      <h1>{{ page.title }}</h1>
+      <p class="post-meta">
+        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+        {% assign words = content | strip_html | number_of_words %}
+        · {{ words | divided_by: 200 | plus: 1 }} min read
+      </p>
+    </header>
+
+    <div class="prose" id="post-content">
+      {{ content }}
+    </div>
+
+    {% assign same = site.posts | where: "category", page.category %}
+    {% if same.size > 1 %}
+    <nav class="post-nav">
+      {% for p in same %}
+        {% if p.url == page.url %}
+          {% assign idx = forloop.index0 %}
+        {% endif %}
+      {% endfor %}
+      {% assign newer_idx = idx | minus: 1 %}
+      {% assign older_idx = idx | plus: 1 %}
+      {% if newer_idx >= 0 %}{% assign newer = same[newer_idx] %}{% endif %}
+      {% assign older = same[older_idx] %}
+      {% if older %}
+        <a class="post-nav-link prev" href="{{ older.url | relative_url }}"><span>← Older</span>{{ older.title }}</a>
+      {% else %}<span></span>{% endif %}
+      {% if newer %}
+        <a class="post-nav-link next" href="{{ newer.url | relative_url }}"><span>Newer →</span>{{ newer.title }}</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </article>
+
+  <aside class="toc" id="toc" hidden>
+    <p class="toc-title">On this page</p>
+    <ul id="toc-list"></ul>
+  </aside>
+</div>

@@ -1,67 +1,71 @@
 ---
-title: Unreal Engine Improve Slate Creation
+title: Improve Slate Creation
+description: Speed up compile times of large Slate Construct functions.
 author: Xander Berten
 layout: post
+category: Unreal Engine
 ---
 
+Slate layouts are built with deeply nested, template-heavy code (`SNew`, `SAssignNew`, slot operators, ...). With optimizations enabled, the compiler can spend a surprisingly long time on a single big `Construct` function. Unreal provides two macros to help with that:
 
 ```cpp
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 ```
 
-These defines just boil down to enabling disabling shipping build optimazations.
+These macros turn compiler optimizations **off** for the code between them, which makes that code compile much faster.
 
+## Usage
 
-## Usage of the macro
+Put the macros **around** the whole function, not inside it:
 
 ```cpp
-// MyCustomWidget.cpp
-#include "MyCustomWidget.h"
+// SMyCustomWidget.cpp
+#include "SMyCustomWidget.h"
 #include "Widgets/Text/STextBlock.h"
-#include "Widgets/Layout/SBorder.h" // For SBorder
-#include "Styling/CoreStyle.h"      // For FCoreStyle, or use FAppStyle
+#include "Widgets/Layout/SBorder.h"
+#include "Styling/AppStyle.h"
+
+BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SMyCustomWidget::Construct(const FArguments& InArgs)
 {
-    // --- Optimizations take a break from this point ---
-    BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
-
     ChildSlot
     [
         SNew(SBorder)
-        .Padding(15.0f) // A little more padding for effect!
-        .BorderImage(FAppStyle::GetBrush("Brushes.Panel")) // Example brush
+        .Padding(15.0f)
+        .BorderImage(FAppStyle::GetBrush("Brushes.Panel"))
         [
             SNew(STextBlock)
             .Text(NSLOCTEXT("MyUINamespace", "WelcomeText", "Slate Development Just Got Faster!"))
-            .Font(FCoreStyle::Get().GetFontStyle("EmbossedText")) // Example font
         ]
     ];
-
-    // --- And optimizations are back on! ---
-    END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 }
+
+END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 ```
 
+> Don't place the macros inside a function body. They expand to `#pragma optimize` style directives, and MSVC only accepts those **outside** of functions (inside a function you get *error C2156: pragma must be outside function*). This is also how the engine itself uses them.
+{: .block-warning }
 
-## What Are These Macros Really Doing?
+## What are these macros really doing?
 
-At their core, BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION and END_SLATE_FUNCTION_BUILD_OPTIMIZATION are like light switches for your compiler's optimization engine, but only for the chunk of code nestled between them.
+They act like a light switch for the compiler's optimizer, but only for the code in between:
 
-    BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION: This tells the compiler, "Hey, for this next bit of code, take it easy on the heavy-duty optimizations."
-    END_SLATE_FUNCTION_BUILD_OPTIMIZATION: And this says, "Alright, you can go back to your usual optimization efforts now."
+- `BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION` — "for the next bit of code, skip the heavy optimizations."
+- `END_SLATE_FUNCTION_BUILD_OPTIMIZATION` — "go back to the normal optimization settings."
 
-Under the hood, these macros typically expand to compiler-specific pragmas (like #pragma optimize( "", off ) for MSVC) that temporarily dial down the optimization level. The magic, however, lies in when they do this. It's often controlled by a preprocessor definition like UE_BUILD_OPTIMIZED_SLATE_FUNCTIONS. This flag is usually:
+Under the hood they expand to the engine's disable/enable optimization macros (for example `UE_DISABLE_OPTIMIZATION_SHIP` / `UE_ENABLE_OPTIMIZATION_SHIP` in recent versions), which in turn become compiler-specific pragmas like `#pragma optimize("", off)` on MSVC.
 
-    Disabled (set to 0) in development and editor builds. This is when the macros actively turn off optimizations for the Slate code block.
-    Enabled (set to 1) in shipping builds. Here, the macros effectively do nothing, letting your project's full optimization settings take charge for the final product.
+> The exact definition has changed between engine versions. If you want to know what they do in your version, look them up in `SlateGlobals.h` in the SlateCore module.
+{: .block-info }
 
-## The Payoff: What This Means For Your Daily Grind
+## Why is this okay?
 
-    During Development (Debug, Development Editor configurations):
-        The Win: Compile times for your UI code can be noticeably reduced. This means less waiting and more doing, especially when you're iterating on widget layouts and designs. Your "change UI -> compile -> test" cycle becomes much tighter.
-        The (Tiny) Trade-off: The machine code for these specific Slate construction blocks won't be as heavily optimized. But, as mentioned, this part of the code is usually not a runtime bottleneck during UI creation.
+Optimizing code makes it *run* faster, but it also makes it *compile* slower. For Slate construction code that trade-off is usually not worth it:
 
-    For Shipping Builds:
-        These macros gracefully step aside. Your Slate code, along with everything else, gets the full optimization treatment defined by your project's build configuration. This ensures your players get the best possible runtime performance.
+- **Faster iteration:** compile times for your UI code can drop noticeably, so your *change UI → compile → test* loop gets tighter.
+- **Negligible runtime cost:** `Construct` runs once when the widget is created. It is almost never a performance bottleneck, so unoptimized machine code for it doesn't matter.
+
+> Only use these macros for **construction** code. Don't wrap code that runs every frame, like `OnPaint`, `Tick` or `ComputeDesiredSize`, because there the missing optimizations *will* cost you performance.
+{: .block-tip }

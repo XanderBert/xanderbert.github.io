@@ -1,306 +1,352 @@
 ---
-title: Creating Custom Tracks For the Sequencer
+title: Creating Custom Tracks For The Sequencer
+description: Extend Unreal's Sequencer with your own track and section types in C++.
 author: Xander Berten
 layout: post
-toc:
-    enabled: true
-
+category: Unreal Engine
 ---
 
-I assume you have basic knowledge about creating plugins in Unreal Engine and how Modules work.
+> I assume you have basic knowledge of creating plugins in Unreal Engine and how modules work. To keep things concise, all code in this post is written in header files.
+{: .block-info }
 
-I have kept all code in header files to be more consise
+## Why?
 
-# Why?
+Why would you bother creating custom tracks for the Sequencer?
 
-why would you bother creating custom tracks for the sequencer?
+### Extend the Sequencer beyond animation and camera work
 
-## Extend Sequencer Beyond Animation and Camera Work
-Custom tracks let you sequence anything that can be represented in C++.
+Custom tracks let you sequence **anything** that can be represented in C++. For example:
 
-### Examples:
-
-- Trigger gameplay events at precise frame times.
-
+- Trigger gameplay events at precise frames.
 - Drive AI behaviors or scripted sequences.
-
 - Sync real-time visual effects (Niagara, lighting changes, custom shaders).
-
 - Control procedural systems like weather or crowd simulation.
+- Build interactive cutscenes that respond to player input (I personally like this one).
 
-- Build interactive cutscenes that respond to player input. (i personally like this one)
+This removes the ugly middle layer where you'd otherwise hack gameplay triggers into Blueprints or tick functions. Your Sequencer timeline becomes the director's console for your game systems, not just for visuals.
 
-This removes the ugly middle layer where you’d otherwise hack gameplay triggers into blueprints or tick functions.
+### Authoring tools for designers and artists
 
-This means your Sequencer timeline can become the director’s console for your game systems, not just for visuals.
-
-
-## Authoring Tools for Designers and Artists
-
-By writing a custom UMovieSceneTrack and its corresponding FMovieSceneTrackEditor, you’re actually adding a new track type directly into the Sequencer editor UI.
+By writing a custom `UMovieSceneTrack` and its corresponding `FMovieSceneTrackEditor`, you are adding a new track type directly to the Sequencer editor UI.
 
 So now your technical designers can:
 
 - Add this track like any other.
-
 - See keyframes and sections.
-
 - Modify parameters visually.
-
 - Reuse it across projects.
 
-It empowers non-programmers to drive custom systems through Sequencer
+It empowers non-programmers to drive custom systems through the Sequencer.
 
+## How?
 
-# How?
-Now that we have a idea why this can be extremly helpful and reusable. ill try to explain how it internaly works
+Now that we have an idea of why this can be extremely helpful and reusable, I'll explain how it works internally.
 
+### Basic concepts in the Sequencer
 
-## Basic concepts in the Sequencer
-A sequence consists of tracks
-each tracks consist of sections
+- A **sequence** consists of **tracks**.
+- Each **track** consists of **sections**: blocks on the timeline with a start and an end.
 
-![sequence](/assets/images/sequence.png)
+![A sequence with tracks and sections](/assets/images/sequence.png)
 
-Now that we have a basic idae of how the sequencer is build up we can start creating our Sections and Track. 
+We'll build this bottom-up: first the section, then the track that holds the sections.
 
-Now i will start from bottom up meaning ill start with Sections and then how they fit into Tracks ..
+**Overview of the classes we'll create:**
 
+| Class | Module | Purpose |
+|---|---|---|
+| `UMovieSceneTestSection` | Runtime | The data of one section on the timeline |
+| `UMovieSceneTestSectionInstance` | Runtime | Runs code when a section starts and ends |
+| `UMovieSceneTestTrack` | Runtime | Holds and manages the sections |
+| `FMovieSceneTestTemplate` + `FTestToken` | Runtime | Runs code every frame while a section is active |
+| `FMovieSceneTestTrackEditor` | Editor | Makes the track show up in the Sequencer UI |
 
-# Runtime
+## Runtime
 
-## Sections
+### Sections
 
-**Its important to understand that Sections have:**
--  **A class that defines a section (`UMovieSceneSection`)**
+It's important to understand that a section consists of **two** classes:
 
--  **A class that is the runtime instance of it (`UMovieSceneTrackInstance`)**
+- **A class that defines the section** (`UMovieSceneSection`). This is the data you edit in the Sequencer.
+- **A class that is the runtime instance of it** (`UMovieSceneTrackInstance`). This is the object that actually *does* something while the sequence plays.
 
-### UMovieSceneSection
+#### UMovieSceneSection
 
 ```cpp
-//This class defines a section in a track
-//Here we define the data that we want in a section
+#include "MovieSceneSection.h"
+#include "EntitySystem/IMovieSceneEntityProvider.h"
+#include "EntitySystem/BuiltInComponentTypes.h"
+#include "EntitySystem/TrackInstance/MovieSceneTrackInstance.h"
+#include "MovieSceneTestSection.generated.h"
+
+class UMovieSceneTestSectionInstance;
+
+// Defines a section in our track.
+// This is where we define the data we want to edit per section.
 UCLASS()
 class CUSTOMSEQUENCERPLUGIN_API UMovieSceneTestSection : public UMovieSceneSection, public IMovieSceneEntityProvider
 {
     GENERATED_BODY()
+
 public:
-    
-    UMovieSceneTestSection::UMovieSceneTestSection(const FObjectInitializer& ObjectInitializer)
-    : Super(ObjectInitializer)
+    UMovieSceneTestSection(const FObjectInitializer& ObjectInitializer)
+        : Super(ObjectInitializer)
     {
+        // Restore everything we changed once the section is done
         EvalOptions.CompletionMode = EMovieSceneCompletionMode::RestoreState;
         bSupportsInfiniteRange = true;
         BlendType = EMovieSceneBlendType::Absolute;
     }
 
-    // This function describes how our Instances are created provided by inheriting from IMovieSceneEntityProvider
+    // Provided by IMovieSceneEntityProvider.
+    // Describes how the runtime instance of this section is created.
     virtual void ImportEntityImpl(UMovieSceneEntitySystemLinker* EntityLinker, const FEntityImportParams& Params, FImportedEntity* OutImportedEntity) override
     {
         using namespace UE::MovieScene;
 
-        FMovieSceneTrackInstanceComponent TrackInstance{ decltype(FMovieSceneTrackInstanceComponent::Owner)(this),UMovieSceneTestSectionInstance::StaticClass() };
+        FMovieSceneTrackInstanceComponent TrackInstance{ decltype(FMovieSceneTrackInstanceComponent::Owner)(this), UMovieSceneTestSectionInstance::StaticClass() };
 
         OutImportedEntity->AddBuilder(
             FEntityBuilder()
             .AddTag(FBuiltInComponentTypes::Get()->Tags.Root)
             .Add(FBuiltInComponentTypes::Get()->TrackInstance, TrackInstance)
         );
-    }   
+    }
 
     UPROPERTY(EditAnywhere)
     FViewTargetTransitionParams InTransitionParams;
-    
+
     UPROPERTY(EditAnywhere)
     FViewTargetTransitionParams OutTransitionParams;
 };
 ```
 
+> `ImportEntityImpl` uses `UMovieSceneTestSectionInstance::StaticClass()`, so the full declaration of the instance class must be included in the file where this function is compiled. A forward declaration is not enough.
+{: .block-warning }
 
-### UMovieSceneTrackInstance
+#### UMovieSceneTrackInstance
 
-The instance is mainly used to execute code at the begining and end of a section.
+The instance is mainly used to execute code at the **beginning** and **end** of a section:
+
+- `OnInputAdded` is called when a section becomes active.
+- `OnInputRemoved` is called when a section stops being active.
+- `OnAnimate` is called every frame while at least one section is active.
+- `OnDestroyed` is called when the instance is cleaned up.
 
 ```cpp
-// This class defines how our Instance of the section works
+// Defines what happens at runtime while our section is active
 UCLASS(MinimalAPI)
 class UMovieSceneTestSectionInstance : public UMovieSceneTrackInstance
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
-	virtual void OnDestroyed() override;
-    virtual void OnInputAdded(const FMovieSceneTrackInstanceInput& InInput) override;
+protected:
+    virtual void OnInputAdded(const FMovieSceneTrackInstanceInput& InInput) override
+    {
+        Section = Cast<UMovieSceneTestSection>(InInput.Section);
+        // Section started
+    }
 
+    virtual void OnInputRemoved(const FMovieSceneTrackInstanceInput& InInput) override
+    {
+        // Section ended
+    }
+
+    virtual void OnDestroyed() override
+    {
+        Section = nullptr;
+    }
 
 private:
-    TObjectPtr<UMovieSceneTestSection> Section{};
+    UPROPERTY()
+    TObjectPtr<UMovieSceneTestSection> Section;
 };
 ```
 
-![section instance](/assets/images/section_instance.png)
+![Section instance callbacks on the timeline](/assets/images/section_instance.png)
 
-
-I suggest using `OnInputAdded` to do stuff at the beginning, As you can can "grab" more context out of the sequencer (such as bound objects to this track) trough the `InInput`. This is done trough the Linker InstanceRegistry. I will write another post about this topic later on.
+I suggest using `OnInputAdded` to run code at the beginning of a section, because you can "grab" more context out of the Sequencer (such as the objects bound to this track) through `InInput`. This is done through the linker's instance registry:
 
 ```cpp
+virtual void OnInputAdded(const FMovieSceneTrackInstanceInput& InInput) override
+{
     using namespace UE::MovieScene;
+
     const FInstanceRegistry* InstanceRegistry = GetLinker()->GetInstanceRegistry();
     const FSequenceInstance& SequenceInstance = InstanceRegistry->GetInstance(InInput.InstanceHandle);
     TSharedRef<const FSharedPlaybackState> SharedPlaybackState = SequenceInstance.GetSharedPlaybackState();
+
+    // Use SharedPlaybackState to resolve bindings, get the playback context (world), etc.
+}
 ```
 
+> I'll write a separate post about the instance registry and resolving bindings. For an example of resolving a binding, see [Getting The Camera From The Sequencer]({% post_url UnrealEngine/2025-05-16-GettingTheCameraFromTheSequencer %}).
+{: .block-tip }
 
-Okay now we have a section in a track that can do stuff when it begins and ends.
+Okay, now we have a section that can do things when it begins and ends. Let's build a track for it!
 
-Now lets build a track for this section!
+### UMovieSceneTrack
 
-## UMovieSceneTrack
-This track defines what happens when we add, remove tracks that are supported
+The track manages its sections: it creates, stores and removes them, and it defines which section types it supports.
 
-
-This is mostly the same for each track you want to make.
+Most of this is the same for every track you make.
 
 ```cpp
-
-class UMovieSceneTestSection
+#include "MovieSceneNameableTrack.h"
+#include "Compilation/IMovieSceneTrackTemplateProducer.h"
+#include "MovieSceneTestSection.h"
+#include "MovieSceneTestTemplate.h"
+#include "MovieSceneTestTrack.generated.h"
 
 UCLASS()
 class CUSTOMSEQUENCERPLUGIN_API UMovieSceneTestTrack : public UMovieSceneNameableTrack, public IMovieSceneTrackTemplateProducer
 {
     GENERATED_BODY()
-public:
-    virtual ~UMovieSceneTestTrack() override = default;
 
+public:
     virtual void AddSection(UMovieSceneSection& Section) override
     {
-	    //Store the newly created section for the track
-	    Sections.Add(&Section);
+        // Store the newly created section in this track
+        Sections.Add(&Section);
     }
 
-    virtual class UMovieSceneSection* CreateNewSection() override
+    virtual UMovieSceneSection* CreateNewSection() override
     {
-	    //Create a new section for the track
-	    return NewObject<UMovieSceneSection>(this, UMovieSceneCameraChangeSection::StaticClass(), NAME_None, RF_Transactional);
+        // Create a new section for this track
+        return NewObject<UMovieSceneTestSection>(this, NAME_None, RF_Transactional);
     }
 
     virtual const TArray<UMovieSceneSection*>& GetAllSections() const override
     {
-	    //Get all our sections in this track
-	    return Sections;
+        return Sections;
     }
 
     virtual EMovieSceneTrackEasingSupportFlags SupportsEasing(FMovieSceneSupportsEasingParams& Params) const override
     {
-        //This function will allow easing in out as in camera cut tracks
-        //For simplicity this is set to None right now
+        // Return EMovieSceneTrackEasingSupportFlags::All to allow easing in/out like camera cut tracks.
+        // For simplicity it's disabled here.
         return EMovieSceneTrackEasingSupportFlags::None;
     }
 
-    virtual void RemoveSection(UMovieSceneSection& section) override
+    virtual void RemoveSection(UMovieSceneSection& Section) override
     {
-        //Remove the section then sort the sections in this track
-	    Sections.Remove(&section);
-	    MovieSceneHelpers::SortConsecutiveSections(MutableView(Sections));
+        // Remove the section, then sort the remaining sections
+        Sections.Remove(&Section);
+        MovieSceneHelpers::SortConsecutiveSections(MutableView(Sections));
     }
 
     virtual void RemoveSectionAt(int32 SectionIndex) override
     {
-        //Remove the section then sort the sections in this track
-	    UMovieSceneSection* SectionToDelete = Sections[SectionIndex];
-	    Sections.RemoveAt(SectionIndex);
-	    MovieSceneHelpers::SortConsecutiveSections(MutableView(Sections));
+        Sections.RemoveAt(SectionIndex);
+        MovieSceneHelpers::SortConsecutiveSections(MutableView(Sections));
     }
 
     virtual bool HasSection(const UMovieSceneSection& Section) const override
     {
-	    return Sections.Contains(&Section);
+        return Sections.Contains(&Section);
     }
 
     virtual bool IsEmpty() const override
     {
-	    return Sections.Num() == 0;
-    }
-    
-    virtual void RemoveAllAnimationData() override
-    {
-	    Sections.Empty();
+        return Sections.Num() == 0;
     }
 
-    virtual bool SupportsMultipleRows() const
+    virtual void RemoveAllAnimationData() override
     {
-        //Here we can define if our track can have multiple rows
+        Sections.Empty();
+    }
+
+    virtual bool SupportsMultipleRows() const override
+    {
+        // Can sections be stacked on multiple rows in this track?
         return false;
     }
 
-    virtual bool SupportsType(TSubclassOf<UMovieSceneSection> SectionClass) const
+    virtual bool SupportsType(TSubclassOf<UMovieSceneSection> SectionClass) const override
     {
-        // Here we say which sections are supported in this track
-	    return SectionClass == UMovieSceneTestSection::StaticClass();
+        // Which section types can be added to this track
+        return SectionClass == UMovieSceneTestSection::StaticClass();
     }
 
 #if WITH_EDITORONLY_DATA
-    virtual FText GetDisplayName() const override
+    virtual FText GetDefaultDisplayName() const override
     {
-	    //Get the display name of the track
-	    return FText::FromString("Test Tack");
+        return NSLOCTEXT("CustomSequencer", "TestTrackName", "Test Track");
     }
 #endif
 
+    // Provided by IMovieSceneTrackTemplateProducer
     virtual FMovieSceneEvalTemplatePtr CreateTemplateForSection(const UMovieSceneSection& InSection) const override
     {
-	    return FMovieSceneTestTemplate(*CastChecked<UMovieSceneTestSection>(&InSection), *this);
+        return FMovieSceneTestTemplate(*CastChecked<UMovieSceneTestSection>(&InSection), *this);
     }
 
-
 private:
-
-    /** List of all sections inside of this track */
+    /** All sections in this track */
     UPROPERTY()
     TArray<TObjectPtr<UMovieSceneSection>> Sections;
 };
 ```
 
-As you may have noticed we also inherited from `IMovieSceneTrackTemplateProducer` this "adds" `tick` support to our track
-Every Evaluation Cycle (tick) a token will get created that evaluates. 
+> `Sections` **must** be a `UPROPERTY`. Otherwise the sections aren't saved with the sequence, and the garbage collector can delete them while the track still points to them.
+{: .block-warning }
 
-This means: Logic that we want in a tick while the section is active should go into the evaluation template:
+### Evaluation template and execution token
 
+You may have noticed that the track also inherits from `IMovieSceneTrackTemplateProducer`. This adds *tick* support to our track: every evaluation (each frame while a section is active), the template is evaluated and produces **execution tokens** that do the actual work.
 
-## FMovieSceneEvalTemplate and IMovieSceneExecutionToken
+This means: logic that should run every frame while the section is active goes into the evaluation template and its token.
+
+Why two steps? The template only **reads** the sequence data and describes what should happen. The token **applies** it. This split lets the Sequencer evaluate everything first and then execute all changes together in the right order.
 
 ```cpp
-//Execution Token, 
-//This gets used to Modify your data, 
-//Sequencer data gets send from the EvalTemplate to the token and the token uses that data to change things.
-struct FTestToken : public IMovieSceneExecutionToken 
-{
-	FTestToken() {};
-	virtual void Execute(const FMovieSceneContext& Context, const FMovieSceneEvaluationOperand& Operand, FPersistentEvaluationData& PersistentData, IMovieScenePlayer& Player) override
-    {
-        MOVIESCENE_DETAILED_SCOPE_CYCLE_COUNTER(MovieSceneEval_OutlineTrack_TokenExecute)
+#include "Evaluation/MovieSceneEvalTemplate.h"
+#include "Evaluation/MovieSceneExecutionTokens.h"
+#include "MovieSceneTestTemplate.generated.h"
 
-        // Stuff you want to happen on the tick should go here
+class UMovieSceneTestSection;
+class UMovieSceneTestTrack;
+
+// Execution token: this is where you change things.
+// The template passes the data it read from the Sequencer to the token, and the token applies it.
+struct FTestToken : public IMovieSceneExecutionToken
+{
+    FTestToken() = default;
+
+    virtual void Execute(const FMovieSceneContext& Context, const FMovieSceneEvaluationOperand& Operand, FPersistentEvaluationData& PersistentData, IMovieScenePlayer& Player) override
+    {
+        MOVIESCENE_DETAILED_SCOPE_CYCLE_COUNTER(MovieSceneEval_TestTrack_TokenExecute)
+
+        // Things you want to happen every frame go here
     }
 };
 
-
-//This struct gets used to evaluate the sequencer 
-//This is mainly to read out the data of the sequencer
+// Evaluation template: reads out the Sequencer data for the current frame
 USTRUCT()
 struct FMovieSceneTestTemplate : public FMovieSceneEvalTemplate
 {
-	GENERATED_BODY()
-	FMovieSceneTestTemplate() = default;
-	FMovieSceneTestTemplate(const UMovieSceneCameraChangeSection& Section, const UMovieSceneCameraChangeTrack& Track);
+    GENERATED_BODY()
+
+    FMovieSceneTestTemplate() = default;
+    FMovieSceneTestTemplate(const UMovieSceneTestSection& Section, const UMovieSceneTestTrack& Track) {}
 
 private:
-	virtual UScriptStruct& GetScriptStructImpl() const override { return *StaticStruct(); }
-	virtual void Evaluate(const FMovieSceneEvaluationOperand& Operand, const FMovieSceneContext& Context, const FPersistentEvaluationData& PersistentData, FMovieSceneExecutionTokens& ExecutionTokens) const override;
+    virtual UScriptStruct& GetScriptStructImpl() const override { return *StaticStruct(); }
+
+    virtual void Evaluate(const FMovieSceneEvaluationOperand& Operand, const FMovieSceneContext& Context, const FPersistentEvaluationData& PersistentData, FMovieSceneExecutionTokens& ExecutionTokens) const override
+    {
+        // Read what you need from Context (current time, playback status, ...) and hand it to the token
+        ExecutionTokens.Add(FTestToken());
+    }
 };
 ```
 
-# Editor
-Now we have everything setup for our runtime to work. But now we should be able to add tracks and modify them in the editor right?
+> Evaluation templates and execution tokens are the **legacy** evaluation path. Newer engine tracks use the entity component system (the `IMovieSceneEntityProvider` + `UMovieSceneTrackInstance` approach from above, where `OnAnimate` runs every frame). Both still work, but if you only need per-frame logic, `OnAnimate` on the track instance is the more future-proof option.
+{: .block-info }
 
-This is what will be explained here
+## Editor
+
+Now everything is set up for our runtime to work. But we also want to be able to add these tracks and modify them in the editor, right? That's what the `FMovieSceneTrackEditor` in the editor module is for.
+
+> This part is still being written. Check back soon!
+{: .block-info }

@@ -1,10 +1,29 @@
-# Configurations
+# Site
 title:            Xander's Notebook
-longtitle:        Xander's Notebook
-
-remote_theme:     sighingnow/jekyll-gitbook
-syntax_highlighter_style: github
-
+description:      Notes on rendering, Vulkan and Unreal Engine.
+author:           Xander Berten
 github_username:  XanderBert
-facebook: false
-twitter: false
+
+# Order of the categories in the sidebar and on the home page.
+# Every post sets `category:` in its front matter to one of these.
+category_order:
+  - Unreal Engine
+  - Vulkan
+  - Resources
+
+# Keep the URLs the old theme generated (no category in the path)
+permalink:        /:year/:month/:day/:title:output_ext
+
+markdown:         kramdown
+highlighter:      rouge
+kramdown:
+  input:          GFM
+  hard_wrap:      false
+  syntax_highlighter: rouge
+
+exclude:
+  - README.md
+  - LICENSE
+  - _posts/TODO.md
+  - _posts/.idea
+  - .idea
